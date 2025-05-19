@@ -7,10 +7,14 @@ import '../models/country_code.dart';
 class PhoneInput extends StatelessWidget {
   // dynamic country code dropdown value 
   final List<CountryCode> countryCodes;
+  final ValueChanged<String> onTextFieldChange;
+  final bool isTextFiledEnabled;
 
   const PhoneInput({
     super.key,
-    required this.countryCodes 
+    required this.countryCodes,
+    required this.onTextFieldChange,
+    required this.isTextFiledEnabled
   });
 
   @override
@@ -83,6 +87,8 @@ class PhoneInput extends StatelessWidget {
               ),
             ),
             keyboardType: TextInputType.phone,
+            onChanged: onTextFieldChange,
+            enabled: isTextFiledEnabled,
           ),
           
           

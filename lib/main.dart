@@ -7,9 +7,11 @@ import 'screens/intro_screen.dart';
 import 'config/app_routes.dart';
 import 'config/app_theme.dart';
 import 'controllers/nav_controller.dart';
+import 'controllers/auth_controller.dart';
 
 void main() {
   // Get.put(HoroscopeController());
+  Get.put(AuthController());
   Get.put(NavController());
   runApp(const AstrologyApp());
 }

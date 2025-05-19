@@ -10,6 +10,9 @@ class AuthFormLayout extends StatelessWidget {
   final VoidCallback onPrimaryButtonPressed;
   final VoidCallback onSecondaryButtonPressed;
   final VoidCallback onLogin;
+  final ValueChanged<String> onTextFieldChange;
+  final bool isTextFiledEnabled;
+
 
   AuthFormLayout({
     super.key,
@@ -17,6 +20,8 @@ class AuthFormLayout extends StatelessWidget {
     required this.onPrimaryButtonPressed,
     required this.onSecondaryButtonPressed,
     required this.onLogin,
+    required this.onTextFieldChange,
+    required this.isTextFiledEnabled
   });
 
   // Constants for consistent spacing and sizing
@@ -78,7 +83,7 @@ class AuthFormLayout extends StatelessWidget {
                 const SizedBox(height: _smallSpacing),
                 DividerWithText(text: l10n.logInOrSignUp),
                 const SizedBox(height: _mediumSpacing),
-                isMobile ?  PhoneInput(countryCodes : _countryCodes) : const EmailInput(),
+                isMobile ?  PhoneInput(countryCodes : _countryCodes, onTextFieldChange: onTextFieldChange, isTextFiledEnabled: isTextFiledEnabled) : const EmailInput(),
                 const SizedBox(height: _mediumSpacing),
                 SizedBox(
                   width: double.infinity,

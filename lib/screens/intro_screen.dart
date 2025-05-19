@@ -5,6 +5,7 @@ import '../layouts/auth_form_layout.dart';
 import '../widgets/language_switcher.dart';
 import '../widgets/illustration.dart';
 import '../utils/circle_clipper.dart';
+import '../controllers/auth_controller.dart';
 import 'otp_verification_screen.dart';
 import 'login_screen.dart';
 
@@ -13,11 +14,14 @@ class IntroScreen extends StatelessWidget {
 
   // Constants for consistent spacing and sizing
   static const Color _brownColor = Color(0xFF4E342E);
+  static const double _padding = 20.0;
+  static const double _mediumSpacing = 12.0;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final RxBool isMobile = true.obs;
+    final authController = Get.find<AuthController>();
 
     return Obx(
       () => Scaffold(
@@ -49,16 +53,41 @@ class IntroScreen extends StatelessWidget {
                       Illustration(imagePath: isMobile.value ? 'assets/intro_with_phone.png' : 'assets/intro_with_email.png'),
                       AuthFormLayout(
                         isMobile: isMobile.value,
-                        onPrimaryButtonPressed: () {
-                          Get.to(() => OtpVerificationScreen(isMobile: isMobile.value));
+                        onPrimaryButtonPressed: () async {
+                          if (authController.isPhoneNumberValid.value) {
+                            await authController.sendOTP();
+                            if (authController.isOtpVerified.value) {
+                              Get.to(() => OtpVerificationScreen(isMobile: isMobile.value));
+                            }
+                          }
                         },
                         onSecondaryButtonPressed: () {
                           isMobile.value = !isMobile.value;
                         },
-                        onLogin: (){
+                        onLogin: () {
                           Get.off(() => const LoginScreen());
                         },
+                        onTextFieldChange: (value) {
+                          authController.validatePhoneNumber(value);
+                        },
+                        isTextFiledEnabled: authController.isPhoneNumberValid.value,
                       ),
+                      if (authController.errorMessage.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: _padding, vertical: _mediumSpacing),
+                          child: Text(
+                            authController.errorMessage.value,
+                            style: const TextStyle(
+                              color: Colors.red,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      if (authController.isLoading.value)
+                        const Padding(
+                          padding: EdgeInsets.all(_padding),
+                          child: CircularProgressIndicator(),
+                        ),
                     ],
                   ),
                 ),
